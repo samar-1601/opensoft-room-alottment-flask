@@ -21,7 +21,7 @@ def create_app():
     app.register_blueprint(views, url_prefix = '/')
     app.config['APPLICATION_ROOT'] = '/login'
     
-    from .models import User, Note
+    from .models import User
     create_database(app)
     
     login_manager = LoginManager()

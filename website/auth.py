@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 from werkzeug.security import generate_password_hash, check_password_hash
 # Blueprint = way to organise files
 from website.models import User 
@@ -9,6 +9,7 @@ auth = Blueprint('auth', __name__)
 
 @auth.route('/login', methods = ['GET', 'POST'])
 def login():
+    session.pop('_flashes', None)
     if request.method == 'POST':
         rollno = request.form.get('rollno')
         password = request.form.get('password')
@@ -36,7 +37,8 @@ def logout():
 
 @auth.route('/sign-up', methods = ['GET', 'POST'])
 def sign_up():
-    # print("inside Sign-up---------------------")
+    print("inside Sign-up---------------------")
+    session.pop('_flashes', None)
     if request.method == 'POST':
         form = request.form
         rollno = form.get('rollno')

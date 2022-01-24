@@ -1,12 +1,3 @@
-function deleteNote(noteId) {
-  fetch("/delete-note", {
-    method: "POST",
-    body: JSON.stringify({ noteId: noteId }),
-  }).then((_res) => {
-    window.location.href = "/";
-  });
-}
-
 let roomSelected = -1,
   prevRoom;
 
@@ -49,7 +40,6 @@ function setSelected(roomId) {
 }
 
 function allotRoom(roomId) {
-  // console.log(roomId);
   if(roomSelected==-1)
   {
     window.alert("Please select a room !!");

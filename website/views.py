@@ -1,34 +1,19 @@
 # stores views/ urls for the website
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session
 from flask.helpers import flash
 from flask.json import jsonify # way to organise files
 from flask_login import login_required, current_user
-from .models import Note, db, Rooms, User
+from .models import db, Rooms, User
 # from website.auth import login
 import json
 
 views = Blueprint('views', __name__)
-
-# @views.route('/', methods=['GET', 'POST'])
-# def house():
-#     if request.method=='GET':
-#      return 
  
 @views.route('/', methods = ['GET', 'POST'])
 @login_required
 def home():
-    # print("inside home-----------------")
-    # if request.method == 'POST':
-    #     note = request.form.get('note')
-        
-    #     if len(note) < 1:
-    #         flash('Note is too short !!')
-    #     else:
-    #         new_note = Note(data = note, user_id = current_user.id)
-    #         db.session.add(new_note)
-    #         db.session.commit()
-    #         flash('Note Entered Successfully !!')
     print("----- Inside Home function ----")
+    session.pop('_flashes', None)
     rooms = Rooms.query.filter(Rooms.homie != None).all()
     roomList = {}
     for aroom in rooms:
@@ -37,18 +22,6 @@ def home():
     print(roomList)  
     return render_template("home.html", user = current_user, roomList = roomList)
 
-@views.route('/delete-note', methods = ['POST'])
-@login_required
-def delete_note():
-    note = json.loads(request.data)
-    noteId = note['noteId']
-    note = Note.query.get(noteId)
-    if note:
-        if note.user_id == current_user.id:
-            db.session.delete(note)
-            db.session.commit()
-            
-    return jsonify({})
 
 @views.route('/allot-room', methods = ['POST'])
 @login_required
