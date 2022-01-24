@@ -1,0 +1,97 @@
+{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+
+<ul class="showcase">
+  <li>
+    <div class="seat"></div>
+    <small>Available</small>
+  </li>
+  {% if user.isAlotted == True%}
+  <li>
+    <div class="seat user"></div>
+    <small>Your Seat</small>
+  </li>
+  {% else %}
+  <li>
+    <div class="seat selected"></div>
+    <small>Selected</small>
+  </li>
+  {% endif %}
+  
+  <li>
+    <div class="seat occupied"></div>
+    <small>Occupied</small>
+  </li>
+</ul>
+
+<div class="seat-container">
+  <ul class="list-group list-group-flush">
+    {% if user.isAlotted == True%}
+      {% for i in range(10) -%}
+        <div class="row">
+          {% for j in range(10) -%}
+            {% set roomNo = (i*10+j)|string() -%}
+            {% if roomNo in roomList -%}
+            {% if roomList[roomNo][1] == user.rollno -%}
+            <button class="seat user" id="{{roomNo}}" title = "{{roomList[roomNo][0]}} {{roomList[roomNo][1]}}" onClick="setSelected(-1)">{{ roomNo }} {{ " " }}</button>
+            {% else -%}
+            <button class="seat occupied" id="{{roomNo}}" title = "{{roomList[roomNo][0]}} {{roomList[roomNo][1]}}" onClick="setSelected(-1)">{{ roomNo }} {{ " " }}</button>
+            {% endif -%}
+            {% else -%}
+            <button class="seat" id="{{roomNo}}" onClick="setSelected(-1)">{{ roomNo }} {{ " " }}</button>
+            {% endif -%}
+            {{'\n' -}} {% endfor -%}
+        </div>
+      {% endfor %}
+    {% else %}
+      {% for i in range(10) -%}
+        <div class="row">
+          {% for j in range(10) -%}
+            {% set roomNo = (i*10+j)|string() -%}
+            {% if roomNo in roomList -%}
+            <button class="seat occupied" id="{{roomNo}}" title = "{{roomList[roomNo][0]}} {{roomList[roomNo][1]}}" onClick="setSelected({{roomNo}})">{{ roomNo }} {{ " " }}</button>
+            {% else -%}
+            <button class="seat" id="{{roomNo}}" onClick="setSelected({{roomNo}})">{{ roomNo }} {{ " " }}</button>
+            {% endif -%}
+            {{'\n' -}} {% endfor -%}
+        </div>
+      {% endfor %}
+    {% endif %}
+    
+  </ul>
+  <br/>
+  {% if user.isAlotted == False %}
+  <button type="button" class="btn btn-primary" onClick="allotRoom(10)">Confirm
+  </button>
+  {% else %}
+  <h4> Your room is <strong> {{user.rooms[0].roomno}} </strong> </h4>
+  {% endif %}
+</div>
+  {% endblock %} 
+  
+  
+  
+  
+  
+  
+  {# Commented
+  <h1 align="center">Notes</h1>
+  <ul class="list-group list-group-flush" id="notes">
+    {% for note in user.notes %}
+    <li class="list-group-item">
+      {{ note.data }}
+      <button type="button" class="close" onClick="deleteNote({{ note.id }})">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </li>
+    {% endfor %}
+  </ul>
+  <form method="POST">
+    <textarea name="note" id="note" class="form-control"></textarea>
+    <br />
+    <div align="center">
+      <button type="submit" class="btn btn-primary">Add Note</button>
+    </div>
+  </form>
+  #}
+</div>
